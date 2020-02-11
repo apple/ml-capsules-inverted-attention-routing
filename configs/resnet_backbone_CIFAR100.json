@@ -1,0 +1,50 @@
+{
+    "backbone": {
+        "kernel_size": 3,
+        "output_dim": 128,
+        "input_dim": 3,
+        "stride": 2,
+        "padding": 1,
+        "out_img_size": 16
+        },
+    "primary_capsules": {
+        "kernel_size": 1,
+        "stride": 1,
+        "input_dim": 128,
+        "caps_dim": 36,
+        "num_caps": 32,
+        "padding": 0,
+        "out_img_size": 16
+        },
+    "capsules": [
+        {
+            "type" : "CONV",
+            "num_caps": 32,
+            "caps_dim": 36,
+            "kernel_size": 3,
+            "stride": 2,
+            "matrix_pose": true,
+            "out_img_size": 7
+        },
+        {
+            "type": "CONV",
+            "num_caps": 32,
+            "caps_dim": 36,
+            "kernel_size": 3,
+            "stride": 1,
+            "matrix_pose": true,
+            "out_img_size": 5
+        },
+        {
+            "type": "FC",
+            "num_caps": 20,
+            "caps_dim": 36,
+            "matrix_pose": true
+        }      
+    ],
+    "class_capsules": {
+            "num_caps": 100,
+            "caps_dim": 36,
+            "matrix_pose": true
+        }
+    }
