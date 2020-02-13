@@ -212,18 +212,10 @@ class CapsuleCONV(nn.Module):
             )        
     def input_expansion(self, input):
         # input has size [batch x num_of_capsule x height x width x  x capsule_dimension]
-        b, n, h, w, d = input.shape 
-        
-        h_out = int((h-self.kernel_size)/self.stride+1)
-        w_out = int((w-self.kernel_size)/self.stride+1)
-        
-        # this may be slow if the image size is large
-        # TODO: kind of stupid implementation :'(
-        inputs = torch.stack([input[:, :, self.stride * i:self.stride * i + self.kernel_size,
-                             self.stride * j:self.stride * j + self.kernel_size, :] for i in range(h_out) for j in range(w_out)],
-                            dim=-1)  # b,n, kernel_size, kernel_size, h_out*w_out*d
-        inputs = inputs.view(b,n,self.kernel_size, self.kernel_size, h_out, w_out, d)
-        return inputs
+        tiled_input = input.unfold(2,size=self.kernel_size,step=self.stride).unfold(3,size=self.kernel_size,step=self.stride)
+        tiled_input = res.permute([0,1,5,6,2,3,4])
+        # output has size [batch x num_of_capsule x kernel_size x kernel_size x h_out x w_out x capsule_dimension]
+        return tiled_input
     
     def forward(self, input, num_iter, next_capsule_value=None):
         # k,l: kernel size
